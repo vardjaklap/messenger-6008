@@ -52,14 +52,13 @@ const ActiveChat = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  //creating a new object for convo
-  let newConvo = Object.assign({}, state.conversations &&
-      state.conversations.find(
-          (conversation) => conversation.otherUser.username === state.activeConversation
-      ));
   return {
     user: state.user,
-    conversation: newConvo
+    conversation:
+        state.conversations &&
+        state.conversations.find(
+            (conversation) => conversation.otherUser.username === state.activeConversation
+        )
   };
 };
 
