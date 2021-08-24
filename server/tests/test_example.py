@@ -107,7 +107,7 @@ class ReadMessagesTestCase(APITestCase):
 
         # Read message one by user two
         read_message_response_one = self.client.post(
-             "/api/conversations/read_messages", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_two.get("token")}
+             "/api/conversations/read", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_two.get("token")}
         )
         self.assertEqual(read_message_response_one.status_code, 200)
 
@@ -130,7 +130,7 @@ class ReadMessagesTestCase(APITestCase):
 
         # Read message two by user one
         read_message_response_two = self.client.post(
-            "/api/conversations/read_messages", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_one.get("token")}
+            "/api/conversations/read", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_one.get("token")}
          )
         self.assertEqual(read_message_response_two.status_code, 200)
 
@@ -143,7 +143,7 @@ class ReadMessagesTestCase(APITestCase):
 
         # Read message two by user one
         read_message_response_multiple = self.client.post(
-             "/api/conversations/read_messages", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_one.get("token")}
+             "/api/conversations/read", data=self.conversationId, format="json",**{"HTTP_X-ACCESS-TOKEN": data_one.get("token")}
         )
         self.assertEqual(read_message_response_multiple.status_code, 200)
 
