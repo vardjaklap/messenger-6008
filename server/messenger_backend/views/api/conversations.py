@@ -37,7 +37,7 @@ class Conversations(APIView):
                 convo_dict = {
                     "id": convo.id,
                     "messages": [
-                        message.to_dict(["id", "text", "senderId", "createdAt"])
+                        message.to_dict(["id", "text", "senderId", "createdAt", "hasBeenRead"])
                         for message in convo.messages.all()
                     ],
                 }
@@ -67,5 +67,29 @@ class Conversations(APIView):
                 conversations_response,
                 safe=False,
             )
+        except Exception as e:
+            return HttpResponse(status=500)
+
+
+class ReadMessages(APIView):
+
+    def post(self, request):
+        try:
+            user = get_user(request)
+            if user.is_anonymous:
+                return HttpResponse(status=401)
+            body = request.data
+            conversation_id = body.get("conversationId")
+            if conversation_id:
+                conversation = Conversation.objects.filter(id=conversation_id).prefetch_related(Prefetch("messages", queryset=Message.objects.order_by("-createdAt"))).first()
+                messages = conversation.messages.all()
+                for message in messages:
+                    if message.senderId != user.id:
+                        message.hasBeenRead = True
+                        message.save()
+
+                return JsonResponse({"message": "success!", "sender": user.id})
+
+            return JsonResponse(null, safe=False)
         except Exception as e:
             return HttpResponse(status=500)

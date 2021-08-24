@@ -6,6 +6,7 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      unreadMessages: 1
     };
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
@@ -16,6 +17,10 @@ export const addMessageToStore = (state, payload) => {
     if (copyConvo.id === message.conversationId) {
       copyConvo.messages.push(message);
       copyConvo.latestMessageText = message.text;
+      //increase unread message only if from another user
+      if(copyConvo.otherUser.id === message.senderId){
+        copyConvo.unreadMessages++;
+      }
       return copyConvo;
     } else {
       return copyConvo;
@@ -76,6 +81,32 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       return convo;
     } else {
       return convo;
+    }
+  });
+};
+
+export const readReceivedMessages = (state, convoId) => {
+  return state.map((convo) => {
+    let copyConvo = Object.assign({}, convo);
+    if (copyConvo.id === convoId) {
+      copyConvo.unreadMessages = 0;
+      return copyConvo;
+    } else {
+      return copyConvo;
+    }
+  });
+};
+
+export const readMyMessages = (state, convoId) => {
+  return state.map((convo) => {
+    let copyConvo = Object.assign({}, convo);
+    if (copyConvo.id === convoId) {
+      //set last message as read to display avatar icon
+      copyConvo.messages[copyConvo.messages.length-1].hasBeenRead = true;
+      copyConvo.unreadMessages = 0;
+      return copyConvo;
+    } else {
+      return copyConvo;
     }
   });
 };
