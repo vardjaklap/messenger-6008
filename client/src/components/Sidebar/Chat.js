@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
   unreadMessagesChip:{
     fontSize: '12px',
-    fontWeight: "bold"
+    fontWeight: "bold",
+    marginRight: "15px"
   }
 }));
 

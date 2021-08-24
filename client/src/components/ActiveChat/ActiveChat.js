@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     height: 20,
     width: 20,
     marginRight: 2,
-    marginTop: 1,
+    marginTop: 10,
     float: "right"
   }
 
