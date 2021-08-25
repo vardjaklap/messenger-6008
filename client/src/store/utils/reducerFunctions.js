@@ -13,8 +13,8 @@ export const addMessageToStore = (state, payload) => {
   }
 
   return state.map((convo) => {
-    let copyConvo = Object.assign({}, convo);
-    if (copyConvo.id === message.conversationId) {
+    if (convo.id === message.conversationId) {
+      let copyConvo = { ...convo };
       copyConvo.messages.push(message);
       copyConvo.latestMessageText = message.text;
       //increase unread message only if from another user
@@ -23,7 +23,7 @@ export const addMessageToStore = (state, payload) => {
       }
       return copyConvo;
     } else {
-      return copyConvo;
+      return convo;
     }
   });
 };
@@ -85,28 +85,28 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-export const readReceivedMessages = (state, convoId) => {
-  return state.map((convo) => {
-    let copyConvo = Object.assign({}, convo);
-    if (copyConvo.id === convoId) {
-      copyConvo.unreadMessages = 0;
-      return copyConvo;
+export const readReceivedMessages = (state, conversationId) => {
+  return state.map((conversation) => {
+    if (conversation.id === conversationId) {
+      let copyConversation = { ...conversation };
+      copyConversation.unreadMessages = 0;
+      return copyConversation;
     } else {
-      return copyConvo;
+      return conversation;
     }
   });
 };
 
-export const readMyMessages = (state, convoId) => {
-  return state.map((convo) => {
-    let copyConvo = Object.assign({}, convo);
-    if (copyConvo.id === convoId) {
+export const readMyMessages = (state, conversationId) => {
+  return state.map((conversation) => {
+    if (conversation.id === conversationId) {
+      let copyConversation = { ...conversation };
       //set last message as read to display avatar icon
-      copyConvo.messages[copyConvo.messages.length-1].hasBeenRead = true;
-      copyConvo.unreadMessages = 0;
-      return copyConvo;
+      copyConversation.messages[copyConversation.messages.length-1].readStatus = true;
+      copyConversation.unreadMessages = 0;
+      return copyConversation;
     } else {
-      return copyConvo;
+      return conversation;
     }
   });
 };

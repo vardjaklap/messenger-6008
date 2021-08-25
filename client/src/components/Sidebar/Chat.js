@@ -48,7 +48,7 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      {conversation.unreadMessages !== 0 && conversation.unreadMessages && <Chip size="small" color="primary" label={conversation.unreadMessages} className={classes.unreadMessagesChip}/>}
+      {conversation.unreadMessages !== 0 && conversation.unreadMessages && <Chip size="small" color="primary" label={conversation.unreadMessages} className={classes.unreadMessagesChip}></Chip>}
 
     </Box>
   );

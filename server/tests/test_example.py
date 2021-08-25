@@ -103,7 +103,7 @@ class ReadMessagesTestCase(APITestCase):
         )
         self.assertEqual(conversations_response.status_code, status.HTTP_200_OK)
         # Make sure that the last message is unread
-        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("hasBeenRead"), False)
+        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("readStatus"), False)
 
         # Read message one by user two
         read_message_response_one = self.client.post(
@@ -120,7 +120,7 @@ class ReadMessagesTestCase(APITestCase):
         self.assertEqual(conversations_response.status_code, status.HTTP_200_OK)
 
         # Make sure that the last message is read now
-        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("hasBeenRead"), True)
+        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("readStatus"), True)
 
         # Send message two
         send_message_response_two = self.client.post(
@@ -156,5 +156,5 @@ class ReadMessagesTestCase(APITestCase):
         self.assertEqual(conversations_response.status_code, status.HTTP_200_OK)
 
         # Make sure that the last message is read now
-        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("hasBeenRead"), True)
+        self.assertEqual(conversations_response.json()[0].get("messages")[0].get("readStatus"), True)
 

@@ -16,4 +16,4 @@ class Message(utils.CustomModel):
     )
     createdAt = models.DateTimeField(auto_now_add=True, db_index=True)
     updatedAt = models.DateTimeField(auto_now=True)
-    hasBeenRead = models.BooleanField(default = False)
+    readStatus = models.BooleanField(default = False)

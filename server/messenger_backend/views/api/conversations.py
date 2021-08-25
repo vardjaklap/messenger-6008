@@ -37,7 +37,7 @@ class Conversations(APIView):
                 convo_dict = {
                     "id": convo.id,
                     "messages": [
-                        message.to_dict(["id", "text", "senderId", "createdAt", "hasBeenRead"])
+                        message.to_dict(["id", "text", "senderId", "createdAt", "readStatus"])
                         for message in convo.messages.all()
                     ],
                 }
@@ -86,11 +86,7 @@ class Read(APIView):
                 conversation = Conversation.objects.filter(id=conversation_id).prefetch_related(Prefetch("messages", queryset=Message.objects.order_by("-createdAt"))).first()
                 if conversation.user1.id != user.id and conversation.user2.id != user.id:
                     return HttpResponse(status=403)
-                messages = conversation.messages.all()
-                for message in messages:
-                    if message.senderId != user.id:
-                        message.hasBeenRead = True
-                        message.save()
+                conversation.messages.all().update(readStatus = True)
 
             return HttpResponse(status=204)
         except Exception as e:

@@ -78,7 +78,7 @@ export const fetchConversations = () => async (dispatch) => {
       conversation.unreadMessages = 0;
       //We are counting unread messages, but we are also checking that the messages are not from us
       conversation.messages.forEach((message)=>{
-        if(!message.hasBeenRead && message.senderId === conversation.otherUser.id){
+        if(!message.readStatus && message.senderId === conversation.otherUser.id){
           conversation.unreadMessages++;
         }
       })
@@ -128,7 +128,7 @@ export const readMessagesInConvo = (body) => async (dispatch) => {
 
   try {
     dispatch(readMessagesInConversations(body));
-    const data = await axios.post("/api/conversations/read_messages", {conversationId: body});
+    const data = await axios.post("/api/conversations/read", {conversationId: body});
     readMessage(data, body);
   } catch (error) {
     console.error(error);
