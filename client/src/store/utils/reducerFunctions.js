@@ -102,7 +102,9 @@ export const readMyMessages = (state, conversationId) => {
     if (conversation.id === conversationId) {
       let copyConversation = { ...conversation };
       //set last message as read to display avatar icon
-      copyConversation.messages[copyConversation.messages.length-1].readStatus = true;
+      copyConversation.messages.forEach((message)=>{
+        message.readStatus = true;
+      });
       copyConversation.unreadMessages = 0;
       return copyConversation;
     } else {
