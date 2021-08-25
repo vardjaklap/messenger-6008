@@ -6,19 +6,24 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      unreadMessages: 1
     };
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
 
   return state.map((convo) => {
-    let copyConvo = Object.assign({}, convo);
-    if (copyConvo.id === message.conversationId) {
+    if (convo.id === message.conversationId) {
+      let copyConvo = { ...convo };
       copyConvo.messages.push(message);
       copyConvo.latestMessageText = message.text;
+      //increase unread message only if from another user
+      if(copyConvo.otherUser.id === message.senderId){
+        copyConvo.unreadMessages++;
+      }
       return copyConvo;
     } else {
-      return copyConvo;
+      return convo;
     }
   });
 };
@@ -76,6 +81,34 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       return convo;
     } else {
       return convo;
+    }
+  });
+};
+
+export const readReceivedMessages = (state, conversationId) => {
+  return state.map((conversation) => {
+    if (conversation.id === conversationId) {
+      let copyConversation = { ...conversation };
+      copyConversation.unreadMessages = 0;
+      return copyConversation;
+    } else {
+      return conversation;
+    }
+  });
+};
+
+export const readMyMessages = (state, conversationId) => {
+  return state.map((conversation) => {
+    if (conversation.id === conversationId) {
+      let copyConversation = { ...conversation };
+      //set last message as read to display avatar icon
+      copyConversation.messages.forEach((message)=>{
+        message.readStatus = true;
+      });
+      copyConversation.unreadMessages = 0;
+      return copyConversation;
+    } else {
+      return conversation;
     }
   });
 };

@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  readMessagesInConversations,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -73,7 +74,14 @@ export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
     data.forEach((conversation) => {
-      conversation.messages.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1)
+      conversation.messages.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+      conversation.unreadMessages = 0;
+      //We are counting unread messages, but we are also checking that the messages are not from us
+      conversation.messages.forEach((message)=>{
+        if(!message.readStatus && message.senderId === conversation.otherUser.id){
+          conversation.unreadMessages++;
+        }
+      })
     });
     dispatch(gotConversations(data));
   } catch (error) {
@@ -106,6 +114,22 @@ export const postMessage = (body) => async (dispatch) => {
     }
 
     sendMessage(data, body);
+  } catch (error) {
+    console.error(error);
+  }
+};
+const readMessage = (data, body) => {
+  socket.emit("read-message", {
+    conversationId: body,
+    sender: data,
+  });
+};
+export const readMessagesInConvo = (body) => async (dispatch) => {
+
+  try {
+    dispatch(readMessagesInConversations(body));
+    const data = await axios.post("/api/conversations/read", {conversationId: body});
+    readMessage(data, body);
   } catch (error) {
     console.error(error);
   }
